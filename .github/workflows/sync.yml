@@ -45,6 +45,7 @@ jobs:
           
           # 检查文件是否有变动
           git add trips.ics
+          git add processed_emails.json
           if git diff --staged --quiet; then
             echo "没有发现新行程，无需更新。"
           else
