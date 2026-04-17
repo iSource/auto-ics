@@ -1,3 +1,4 @@
 openai
 icalendar
 python-dateutil
+beautifulsoup4
