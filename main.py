@@ -10,10 +10,6 @@ from datetime import datetime
 from openai import OpenAI
 from dateutil import parser
 from bs4 import BeautifulSoup
-from dotenv import load_dotenv
-
-# 加载 .env 环境变量
-load_dotenv()
 
 # 配置 DeepSeek
 client = OpenAI(
