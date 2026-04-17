@@ -28,7 +28,7 @@ jobs:
 
       - name: 3. 安装依赖库
         run: |
-          pip install openai icalendar python-dateutil
+          pip install openai icalendar python-dateutil beautifulsoup4
 
       - name: 4. 执行解析脚本
         env:
