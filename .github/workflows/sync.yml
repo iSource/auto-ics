@@ -1,0 +1,53 @@
+name: Sync 12306 to Calendar
+
+on:
+  schedule:
+    # 每小时运行一次（国际标准时间，0分时触发）
+    - cron: '0 * * * *'
+  # 支持在 GitHub 页面上手动点击按钮立即运行
+  workflow_dispatch:
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+    
+    # 必须开启写入权限，否则脚本无法将生成的 trips.ics 提交回仓库
+    permissions:
+      contents: write
+
+    steps:
+      - name: 1. 拉取仓库代码
+        uses: actions/checkout@v4
+
+      - name: 2. 安装 Python 环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+          # 开启缓存可以加快后续运行速度
+          cache: 'pip'
+
+      - name: 3. 安装依赖库
+        run: |
+          pip install openai icalendar python-dateutil
+
+      - name: 4. 执行解析脚本
+        env:
+          # 这里的变量名必须与你在 Secrets 中设置的一致
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: python main.py
+
+      - name: 5. 将更新后的日历文件推送到仓库
+        run: |
+          git config --global user.name "GitHub Action Bot"
+          git config --global user.email "actions@github.com"
+          
+          # 检查文件是否有变动
+          git add trips.ics
+          if git diff --staged --quiet; then
+            echo "没有发现新行程，无需更新。"
+          else
+            git commit -m "自动更新行程日历: $(date +'%Y-%m-%d %H:%M')"
+            git push
+          fi
