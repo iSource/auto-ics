@@ -18,7 +18,7 @@ def get_email_content():
     try:
         mail = imaplib.IMAP4_SSL("imap.qq.com", 993)
         mail.login(os.getenv("EMAIL_USER"), os.getenv("EMAIL_PASS"))
-        mail.select("12306")
+        mail.select("INBOX")
         
         # 搜索最近 5 封来自 12306 的邮件，确保不漏掉
         status, messages = mail.search(None, '(FROM "12306")')
