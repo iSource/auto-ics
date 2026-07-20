@@ -139,7 +139,7 @@ def parse_with_deepseek(text):
   ]
 }"""
         response = client.chat.completions.create(
-            model="deepseek-chat",
+            model="deepseek-v4-flash",
             messages=[
                 {"role": "system", "content": prompt},
                 {"role": "user", "content": f"内容：\n{text}"}
